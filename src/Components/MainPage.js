@@ -167,11 +167,20 @@ class MainPage extends React.Component {
         return dataURL;
     }
 
+    textToSpan(text, x) {
+        const substrings = text.split("\n");
+        // Taken from https://stackoverflow.com/a/16701952/677910
+        return substrings.map((s, index) => (
+            <tspan key={s + index} x={x} dy={index === 0 ? 0 : "1.2em"}>{s}</tspan>
+        ));
+    }
+
     render() {
         const image = photos[this.state.currentImage];
         const base_image = new Image();
         base_image.src = image.src;
-        var wrh = base_image.width / base_image.height;
+        // || 1 to fix division by zero before image was loaded
+        var wrh = base_image.width / base_image.height || 1;
         var newWidth = 600;
         var newHeight = newWidth / wrh;
         const textStyle = {
@@ -233,8 +242,7 @@ class MainPage extends React.Component {
                                 onMouseUp={event => this.handleMouseUp(event, 'one')}
                                 className="display-linebreak"
                             >
-                                {/* {this.state.text1} */}
-                                Hallo asd
+                                {this.textToSpan(this.state.text1, this.state.oneX)}
                             </text>
                             <text
                                 style={textStyle}
@@ -245,7 +253,7 @@ class MainPage extends React.Component {
                                 onMouseDown={event => this.handleMouseDown(event, 'two')}
                                 onMouseUp={event => this.handleMouseUp(event, 'two')}
                             >
-                                {this.state.text2}
+                                {this.textToSpan(this.state.text2, this.state.twoX)}
                             </text>
                             <text
                                 style={textStyle}
@@ -256,21 +264,21 @@ class MainPage extends React.Component {
                                 onMouseDown={event => this.handleMouseDown(event, 'three')}
                                 onMouseUp={event => this.handleMouseUp(event, 'three')}
                             >
-                                {this.state.text3}
+                                {this.textToSpan(this.state.text3, this.state.threeX)}
                             </text>
                         </svg>
                         <div className="meme-form">
                             <FormGroup>
                                 <Label for="text1">Text 1</Label>
-                                <input className="form-control" type="text" name="text1" id="text1" placeholder="Add text and drag it around" onChange={this.changeText} />
+                                <textarea className="form-control" type="text" name="text1" id="text1" placeholder="Add text and drag it around" rows={3} onChange={this.changeText} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="text2">Text 2</Label>
-                                <input className="form-control" type="text" name="text2" id="text2" placeholder="Add text and drag it around" onChange={this.changeText} />
+                                <textarea className="form-control" type="text" name="text2" id="text2" placeholder="Add text and drag it around" rows={3} onChange={this.changeText} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="text3">Text 3</Label>
-                                <input className="form-control" type="text" name="text3" id="text3" placeholder="Add text and drag it around" onChange={this.changeText} />
+                                <textarea className="form-control" type="text" name="text3" id="text3" placeholder="Add text and drag it around" rows={3} onChange={this.changeText} />
                             </FormGroup>
                             <button onClick={() => this.convertSvgToImage()} className="btn btn-primary">Download Meme!</button>
                         </div>
